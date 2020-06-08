@@ -38,8 +38,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache-directory.outputs.dir }}
-          key: ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}_composer_${{ hashFiles('**/composer.lock') }}
+          key: ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}_composer_dependencies-${{ matrix.dependencies }}_${{ hashFiles('**/composer.lock') }}
           restore-keys: |
+            ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}_composer_dependencies-${{ matrix.dependencies }}
             ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}_composer
             ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}
             ${{ matrix.operating-systems }}
