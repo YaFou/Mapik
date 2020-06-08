@@ -7,3 +7,5 @@
 
 ### Added
 - **KERNEL** - Booting
+- **KERNEL** - Configuration loading
+- **CONFIG** - Environment loading with `Environment`

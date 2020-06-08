@@ -26,6 +26,8 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.1",
+        "hassankhan/config": "^2.1",
+        "vlucas/phpdotenv": "^5.0",
         "yafou/container": "^0.1.0"
     },
     "require-dev": {

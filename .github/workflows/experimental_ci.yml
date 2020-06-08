@@ -47,11 +47,13 @@ jobs:
         id: composer-cache
       - name: Install dependencies (lowest)
         if: ${{ matrix.dependencies == 'lowest' }}
-        run: composer update --no-interaction --no-progress --no-suggest --prefer-lowest --ignore-platform-req=php
+        run: composer update --no-interaction --no-progress --no-suggest --prefer-lowest --ignore-platform-reqs
       - name: Install dependencies (stable)
         if: ${{ matrix.dependencies == 'stable' }}
-        run: composer update --no-interaction --no-progress --no-suggest --prefer-stable --ignore-platform-req=php
+        run: composer update --no-interaction --no-progress --no-suggest --prefer-stable --ignore-platform-reqs
 
       # TESTS
       - name: Run tests
-        run: ./vendor/bin/phpunit
+        run: |
+          mkdir -p storage/coverage/report
+          ./vendor/bin/phpunit

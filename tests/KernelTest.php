@@ -23,8 +23,8 @@ class KernelTest extends TestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
-            'The root directory "%s" is a file',
-            $fileSystem->url() . '/root'
+            'The root directory "%s/root" is not a directory',
+            $fileSystem->url()
         ));
 
         Kernel::boot($fileSystem->url() . '/root');
@@ -32,11 +32,49 @@ class KernelTest extends TestCase
     
     public function testGetRootDirectory(): void
     {
-        $fileSystem = vfsStream::setup();
+        $fileSystem = vfsStream::setup('root', null, ['config' => []]);
 
         $this->assertSame(
             $fileSystem->url(),
             Kernel::boot($fileSystem->url())->getRootDirectory()
+        );
+    }
+
+    public function testNotFoundConfigDirectory(): void
+    {
+        $fileSystem = vfsStream::setup();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf(
+            'The directory "%s%sconfig" does not exist',
+            $fileSystem->url(),
+            DIRECTORY_SEPARATOR
+        ));
+
+        Kernel::boot($fileSystem->url());
+    }
+
+    public function testConfigDirectoryIsAFile(): void
+    {
+        $fileSystem = vfsStream::setup('root', null, ['config' => '']);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(sprintf(
+            'The root directory "%s%sconfig" is not a directory',
+            $fileSystem->url(),
+            DIRECTORY_SEPARATOR
+        ));
+
+        Kernel::boot($fileSystem->url());
+    }
+
+    public function testCustomConfigDirectory(): void
+    {
+        $fileSystem = vfsStream::setup('root', null, ['custom_config' => []]);
+
+        $this->assertInstanceOf(
+            Kernel::class,
+            Kernel::boot($fileSystem->url(), 'custom_config')
         );
     }
 }

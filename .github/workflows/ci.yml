@@ -54,7 +54,9 @@ jobs:
 
       # TESTS
       - name: Run tests
-        run: ./vendor/bin/phpunit
+        run: |
+          mkdir -p storage/coverage/report
+          ./vendor/bin/phpunit
 
   lint:
     name: Lint
