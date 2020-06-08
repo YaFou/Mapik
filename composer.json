@@ -1,0 +1,46 @@
+{
+    "name": "yafou/mapik",
+    "description": "A powerful micro-framework to design APIs",
+    "authors": [
+        {
+            "name": "Yannis Foucher",
+            "homepage": "https://github.com/YaFou",
+            "role": "Owner"
+        }
+    ],
+    "homepage": "https://github.com/YaFou/Mapik",
+    "support": {
+        "issues": "https://github.com/YaFou/Mapik/issues",
+        "source": "https://github.com/YaFou/Mapik"
+    },
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "preferred-install": {
+            "*": "dist"
+        }
+    },
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.1"
+    },
+    "require-dev": {
+        "mikey179/vfsstream": "^1.6",
+        "phpunit/phpunit": "^7 || ^8 || ^9",
+        "spatie/phpunit-watcher": "^1.10",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "YaFou\\Mapik\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "YaFou\\Mapik\\Tests\\": "tests/"
+        }
+    }
+}

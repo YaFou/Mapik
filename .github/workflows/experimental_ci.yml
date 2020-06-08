@@ -1,0 +1,56 @@
+name: Continuous integration (experimental)
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  test:
+    name: 'Test (PHP: ${{ matrix.php-versions }}, OS: ${{ matrix.operating-systems }}, dependencies: ${{ matrix.dependencies }})'
+    runs-on: ${{ matrix.operating-systems }}
+
+    # STRATEGY
+    strategy:
+      matrix:
+        php-versions: ['8.0']
+        operating-systems: [ubuntu-latest, windows-latest, macos-latest]
+        dependencies: ['lowest', 'stable']
+      fail-fast: false
+
+    steps:
+      # SETUP
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v1
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: dom, mbstring
+          coverage: xdebug
+      - name: Get Composer cache directory
+        id: composer-cache-directory
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Composer cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache-directory.outputs.dir }}
+          key: ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}_composer_${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}_composer
+            ${{ matrix.operating-systems }}_php${{ matrix.php-versions }}
+            ${{ matrix.operating-systems }}
+        id: composer-cache
+      - name: Install dependencies (lowest)
+        if: ${{ matrix.dependencies == 'lowest' }}
+        run: composer update --no-interaction --no-progress --no-suggest --prefer-lowest --ignore-platform-reqs=php
+      - name: Install dependencies (stable)
+        if: ${{ matrix.dependencies == 'stable' }}
+        run: composer update --no-interaction --no-progress --no-suggest --prefer-stable --ignore-platform-reqs=php
+
+      # TESTS
+      - name: Run tests
+        run: ./vendor/bin/phpunit
