@@ -25,7 +25,8 @@
     },
     "prefer-stable": true,
     "require": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "yafou/container": "^0.1.0"
     },
     "require-dev": {
         "mikey179/vfsstream": "^1.6",
