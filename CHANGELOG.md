@@ -6,6 +6,13 @@
 ## 0.1.0 - *Unreleased*
 
 ### Added
-- **KERNEL** - Booting
-- **KERNEL** - Configuration loading
-- **CONFIG** - Environment loading with `Environment`
+
+#### Kernel
+- `Kernel` class for booting and getters to get directories.
+
+#### Config
+- `Environment` class which handles environment files (`.env`).
+- Interface to define a config function: `ConfigFunction`.
+- New config function: `EnvironmentFunction`.
+- New config function: `PathFunction`.
+- `Config` class which handles configuration files and resolves values.

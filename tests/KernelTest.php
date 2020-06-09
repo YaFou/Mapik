@@ -32,7 +32,10 @@ class KernelTest extends TestCase
     
     public function testGetRootDirectory(): void
     {
-        $fileSystem = vfsStream::setup('root', null, ['config' => []]);
+        $fileSystem = vfsStream::setup('root', null, [
+            'config' => [],
+            '.env' => 'ENVIRONMENT=env'
+        ]);
 
         $this->assertSame(
             $fileSystem->url(),
@@ -42,7 +45,9 @@ class KernelTest extends TestCase
 
     public function testNotFoundConfigDirectory(): void
     {
-        $fileSystem = vfsStream::setup();
+        $fileSystem = vfsStream::setup('root', null, [
+            '.env' => 'ENVIRONMENT=env'
+        ]);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
@@ -56,7 +61,10 @@ class KernelTest extends TestCase
 
     public function testConfigDirectoryIsAFile(): void
     {
-        $fileSystem = vfsStream::setup('root', null, ['config' => '']);
+        $fileSystem = vfsStream::setup('root', null, [
+            'config' => '',
+            '.env' => 'ENVIRONMENT=env'
+        ]);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(sprintf(
@@ -70,7 +78,10 @@ class KernelTest extends TestCase
 
     public function testCustomConfigDirectory(): void
     {
-        $fileSystem = vfsStream::setup('root', null, ['custom_config' => []]);
+        $fileSystem = vfsStream::setup('root', null, [
+            'custom_config' => [],
+            '.env' => 'ENVIRONMENT=env'
+        ]);
 
         $this->assertInstanceOf(
             Kernel::class,

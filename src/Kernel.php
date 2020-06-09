@@ -9,6 +9,7 @@ use YaFou\Mapik\Exception\InvalidArgumentException;
 class Kernel
 {
     private $rootDirectory;
+    private $configDirectory;
 
     public static function boot(
         string $rootDirectory,
@@ -29,12 +30,16 @@ class Kernel
         }
 
         $environment = self::bootEnvironment($rootDirectory);
+
+        $kernel = new self($rootDirectory, $configDirectory);
+
         self::bootConfiguration(
             $rootDirectory . DIRECTORY_SEPARATOR . $configDirectory,
+            $kernel,
             $environment
         );
 
-        return new self($rootDirectory);
+        return $kernel;
     }
 
     public function getRootDirectory(): string
@@ -42,13 +47,22 @@ class Kernel
         return $this->rootDirectory;
     }
 
+    public function getConfigDirectory(): string
+    {
+        return $this->configDirectory;
+    }
+
     private static function bootEnvironment(string $rootDirectory): Environment
     {
-        return new Environment($rootDirectory);
+        $environment = new Environment($rootDirectory);
+        $environment->load();
+
+        return $environment;
     }
 
     private static function bootConfiguration(
         string $configDirectory,
+        self $kernel,
         Environment $environment
     ): Config {
         if (!file_exists($configDirectory)) {
@@ -65,14 +79,15 @@ class Kernel
             ));
         }
 
-        $config = new Config($configDirectory, $environment);
+        $config = new Config($configDirectory, $kernel, $environment);
         $config->load();
 
         return $config;
     }
 
-    private function __construct(string $rootDirectory)
+    private function __construct(string $rootDirectory, string $configDirectory)
     {
         $this->rootDirectory = $rootDirectory;
+        $this->configDirectory = $configDirectory;
     }
 }

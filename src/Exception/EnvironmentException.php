@@ -2,9 +2,7 @@
 
 namespace YaFou\Mapik\Exception;
 
-use Exception;
-
-class EnvironmentException extends Exception
+class EnvironmentException extends ConfigException
 {
     
 }
